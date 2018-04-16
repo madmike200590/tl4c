@@ -19,6 +19,8 @@ TEST_DRIVER=$(TEST_BUILD_DIR)/test
 
 RELEASE_DIR=release
 RELEASE_HEADERS=$(INCLUDE_DIR)/logging.h
+SRC_RELEASE_DIR=$(RELEASE_DIR)-src
+RELEASE_SOURCES=$(SRC_DIR) $(INCLUDE_DIR) $(TEST_SRC_DIR) makefile
 
 CC=gcc
 
@@ -44,15 +46,16 @@ TEST_OBJFILES=$(subst .c,.o,$(subst $(TEST_SRC_DIR),$(TEST_BUILD_DIR),$(TEST_CFI
                                                        # TARGETS #                                                      
 #########################################################################################################################
 
-.PHONY: all clean compile test-compile test package
+.PHONY: all clean compile test-compile test package package-sources
 
-all : clean $(BUILD_DIR) $(TEST_BUILD_DIR) compile test-compile test package 
+all : clean $(BUILD_DIR) $(TEST_BUILD_DIR) compile test-compile test package package-sources
 
 # delete build output folder if it exists
 clean :
 	if [ -e $(BUILD_DIR) ]; then rm -r $(BUILD_DIR); fi;
 	if [ -e $(TEST_BUILD_DIR) ]; then rm -r $(TEST_BUILD_DIR); fi;
 	if [ -e $(RELEASE_DIR) ]; then rm -r $(RELEASE_DIR); fi;
+	if [ -e $(SRC_RELEASE_DIR) ]; then rm -r $(SRC_RELEASE_DIR); fi;
 
 $(BUILD_DIR) :
 	mkdir $(BUILD_DIR)
@@ -63,6 +66,9 @@ $(TEST_BUILD_DIR) :
 $(RELEASE_DIR) :
 	mkdir $(RELEASE_DIR)
 	mkdir $(RELEASE_DIR)/include
+
+$(SRC_RELEASE_DIR) :
+	mkdir $(SRC_RELEASE_DIR)
 
 compile : $(BUILD_DIR) $(OBJFILES)
 
@@ -75,6 +81,9 @@ package : test $(RELEASE_DIR)
 	ar -cvq $(BUILD_DIR)/$(ARTIFACT_NAME).a $(BUILD_DIR)/*.o
 	cp $(BUILD_DIR)/$(ARTIFACT_NAME).a $(RELEASE_DIR)/$(ARTIFACT_NAME).a
 	cp $(RELEASE_HEADERS) $(RELEASE_DIR)/include/
+
+package-sources : test $(SRC_RELEASE_DIR)
+	cp -r $(RELEASE_SOURCES) $(SRC_RELEASE_DIR)
 
 $(TEST_DRIVER) : $(TEST_OBJFILES)
 	$(CC) $(OBJFILES) $(TEST_OBJFILES) -o $(TEST_DRIVER)

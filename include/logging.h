@@ -9,6 +9,9 @@
 #ifndef LOGGING_H
 #define LOGGING_H
 #include <stdarg.h>
+
+void set_loglevel(int level);
+
 /**
  * Simple logging function for errors
  *
