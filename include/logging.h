@@ -10,6 +10,12 @@
 #define LOGGING_H
 #include <stdarg.h>
 
+#define TL4C_LEVEL_DEBUG 1
+#define TL4C_LEVEL_INFO 2
+#define TL4C_LEVEL_WARN 3
+#define TL4C_LEVEL_ERROR 4
+#define TL4C_LEVEL_FATAL 5
+
 void set_loglevel(int level);
 
 /**

@@ -14,12 +14,6 @@
 #define STR_ERROR "ERROR"
 #define STR_FATAL "FATAL"
 
-#define LEVEL_DEBUG 1
-#define LEVEL_INFO 2
-#define LEVEL_WARN 3
-#define LEVEL_ERROR 4
-#define LEVEL_FATAL 5
-
 #define APPNAME_LOGGING "logging"
 
 //default value for level
@@ -40,10 +34,10 @@ static char* alloc_line(void) {
 }
 
 void set_loglevel(int level) {
-    if (level < LEVEL_DEBUG) {
-        logging_level = LEVEL_DEBUG;
-    } else if (level > LEVEL_FATAL) {
-        logging_level = LEVEL_FATAL;
+    if (level < TL4C_LEVEL_DEBUG) {
+        logging_level = TL4C_LEVEL_DEBUG;
+    } else if (level > TL4C_LEVEL_FATAL) {
+        logging_level = TL4C_LEVEL_FATAL;
     } else {
         logging_level = level;
     }
@@ -52,56 +46,56 @@ void set_loglevel(int level) {
 void log_debug(const char* appname, char* msg, ...) {
     va_list msg_args;
     va_start(msg_args, msg);
-    print_log_line(appname, LEVEL_DEBUG, msg, msg_args);
+    print_log_line(appname, TL4C_LEVEL_DEBUG, msg, msg_args);
     va_end(msg_args);
 }
 
 void log_info(const char* appname, char* msg, ...) {
     va_list msg_args;
     va_start(msg_args, msg);
-    print_log_line(appname, LEVEL_INFO, msg, msg_args);
+    print_log_line(appname, TL4C_LEVEL_INFO, msg, msg_args);
     va_end(msg_args);
 }
 
 void log_warn(const char* appname, char* msg, ...) {
     va_list msg_args;
     va_start(msg_args, msg);
-    print_log_line(appname, LEVEL_WARN, msg, msg_args);
+    print_log_line(appname, TL4C_LEVEL_WARN, msg, msg_args);
     va_end(msg_args);
 }
 
 void log_error(const char* appname, char* msg, ...) {
     va_list msg_args;
     va_start(msg_args, msg);
-    print_log_line(appname, LEVEL_ERROR, msg, msg_args);
+    print_log_line(appname, TL4C_LEVEL_ERROR, msg, msg_args);
     va_end(msg_args);
 }
 
 void log_fatal(const char* appname, char* msg, ...) {
     va_list msg_args;
     va_start(msg_args, msg);
-    print_log_line(appname, LEVEL_FATAL, msg, msg_args);
+    print_log_line(appname, TL4C_LEVEL_FATAL, msg, msg_args);
     va_end(msg_args);
 }
 
 void vlog_debug(const char* appname, char* msg, va_list msg_args) {
-    print_log_line(appname, LEVEL_DEBUG, msg, msg_args);
+    print_log_line(appname, TL4C_LEVEL_DEBUG, msg, msg_args);
 }
 
 void vlog_info(const char* appname, char* msg, va_list msg_args) {
-    print_log_line(appname, LEVEL_INFO, msg, msg_args);
+    print_log_line(appname, TL4C_LEVEL_INFO, msg, msg_args);
 }
 
 void vlog_warn(const char* appname, char* msg, va_list msg_args) {
-    print_log_line(appname, LEVEL_WARN, msg, msg_args);
+    print_log_line(appname, TL4C_LEVEL_WARN, msg, msg_args);
 }
 
 void vlog_error(const char* appname, char* msg, va_list msg_args) {
-    print_log_line(appname, LEVEL_ERROR, msg, msg_args);
+    print_log_line(appname, TL4C_LEVEL_ERROR, msg, msg_args);
 }
 
 void vlog_fatal(const char* appname, char* msg, va_list msg_args) {
-    print_log_line(appname, LEVEL_FATAL, msg, msg_args);
+    print_log_line(appname, TL4C_LEVEL_FATAL, msg, msg_args);
 }
 
 static void print_log_line(const char* appname, int level, char* msg_format,
@@ -112,19 +106,19 @@ static void print_log_line(const char* appname, int level, char* msg_format,
     }
     char* level_str;
     switch (level) {
-        case LEVEL_DEBUG:
+        case TL4C_LEVEL_DEBUG:
             level_str = STR_DEBUG;
             break;
-        case LEVEL_INFO:
+        case TL4C_LEVEL_INFO:
             level_str = STR_INFO;
             break;
-        case LEVEL_WARN:
+        case TL4C_LEVEL_WARN:
             level_str = STR_WARN;
             break;
-        case LEVEL_ERROR:
+        case TL4C_LEVEL_ERROR:
             level_str = STR_ERROR;
             break;
-        case LEVEL_FATAL:
+        case TL4C_LEVEL_FATAL:
             level_str = STR_FATAL;
             break;
         default:
@@ -138,7 +132,7 @@ static void print_log_line(const char* appname, int level, char* msg_format,
     }
     // write user-provided message into buffer before final formatting and output
     int charsWritten = vsnprintf(line, MAX_LOG_LEN, msg_format, msg_args);
-    if (errno != 0 && (level >= LEVEL_ERROR)) {
+    if (errno != 0 && (level >= TL4C_LEVEL_ERROR)) {
         // if errno is set and level is according, include some error info into log output
         char* stderrmsg = strerror(errno);
         (void) fprintf(stderr, "%s %s: %s (errno=%d: %s)\n", level_str, appname,
