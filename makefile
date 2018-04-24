@@ -78,8 +78,8 @@ test : test-compile $(TEST_DRIVER)
 	./$(TEST_DRIVER)
 
 package : test $(RELEASE_DIR)
-	ar -cvq $(BUILD_DIR)/$(ARTIFACT_NAME).a $(BUILD_DIR)/*.o
-	cp $(BUILD_DIR)/$(ARTIFACT_NAME).a $(RELEASE_DIR)/$(ARTIFACT_NAME).a
+	ar -cvq $(BUILD_DIR)/lib$(ARTIFACT_NAME).a $(BUILD_DIR)/*.o
+	cp $(BUILD_DIR)/lib$(ARTIFACT_NAME).a $(RELEASE_DIR)/lib$(ARTIFACT_NAME).a
 	cp $(RELEASE_HEADERS) $(RELEASE_DIR)/include/
 
 package-sources : test $(SRC_RELEASE_DIR)
